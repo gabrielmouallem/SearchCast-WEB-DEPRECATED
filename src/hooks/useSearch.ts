@@ -85,7 +85,7 @@ export function useSearch(text: string) {
       const nextPage = nextPageCondition ? undefined : lastPage.data.page + 1;
       return nextPage;
     },
-    enabled: !!text,
+    enabled: text?.length >= 1,
     refetchOnWindowFocus: false,
     refetchInterval: Infinity,
     refetchOnMount: false,

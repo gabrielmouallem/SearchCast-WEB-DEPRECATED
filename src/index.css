@@ -1,6 +1,21 @@
 body {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: black !important;
+}
+
+.root {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  background-color: black !important;
 }
 
 * {

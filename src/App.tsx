@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import {
   Box,
-  Button,
   CircularProgress,
   Container,
   IconButton,
@@ -13,45 +12,21 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useSearch } from "./hooks/useSearch";
 import { useDebounce } from "@uidotdev/usehooks";
 import React from "react";
-
-function formatTime(seconds: number): string {
-  if (isNaN(seconds) || seconds < 0) {
-    return "Invalid input";
-  }
-
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = Math.floor(seconds % 60);
-
-  const formattedTime = `${minutes}m${remainingSeconds}s`;
-
-  return formattedTime;
-}
-
-function highlightText(searchText: string, text: string): React.ReactNode {
-  if (!searchText) {
-    return <>{text}</>;
-  }
-
-  const parts = text.split(new RegExp(`(${searchText})`, "gi"));
-  return (
-    <>
-      {parts.map((part, i) =>
-        part.toLowerCase() === searchText.toLowerCase() ? (
-          <span key={i} style={{ backgroundColor: "yellow" }}>
-            {part}
-          </span>
-        ) : (
-          <span key={i}>{part}</span>
-        )
-      )}
-    </>
-  );
-}
+import {
+  boxSx,
+  circularProgressSx,
+  innerBoxSx,
+  textFieldSx,
+} from "./App.styles";
+import { LoadMoreButton } from "./components/LoadMoreButton";
+import { formatTime, highlightText } from "./utils";
+import "./index.css";
 
 function App() {
   const [text, setText] = useState("");
   const debouncedText = useDebounce(text, 1000);
   const {
+    isError,
     isLoading,
     isFetchingNextPage,
     data: axiosData,
@@ -66,10 +41,25 @@ function App() {
     return [];
   }, [axiosData]);
 
+  const showLoadMoreButton = !(
+    isLoading ||
+    (!isFetchingNextPage && data.length === 0)
+  );
+
+  const showLinearProgress = isLoading && !isError;
+
+  const searchButtonDisabled = !text?.length;
+
   return (
-    <Box sx={{ p: 5 }}>
+    <Box sx={boxSx}>
       <Container>
-        <Stack width="100%" direction="row" gap={1}>
+        <Stack
+          width="100%"
+          direction="row"
+          gap={1}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
           <TextField
             value={text}
             onChange={(e) => {
@@ -78,13 +68,14 @@ function App() {
             id="search-field"
             label="Search"
             variant="outlined"
+            sx={textFieldSx} // White text color for the input
           />
-          <IconButton onClick={() => refetch()}>
-            <SearchIcon htmlColor="black" />
+          <IconButton onClick={() => refetch()} disabled={searchButtonDisabled}>
+            <SearchIcon htmlColor="white" />
           </IconButton>
         </Stack>
-        <Box sx={{ width: "100%", mt: 5 }}>
-          {isLoading && <LinearProgress />}
+        <Box sx={innerBoxSx}>
+          {showLinearProgress && <LinearProgress />}
           {!isLoading &&
             data.map((group, i) => (
               <React.Fragment key={i}>
@@ -124,13 +115,9 @@ function App() {
               </React.Fragment>
             ))}
           {!!isFetchingNextPage && (
-            <CircularProgress size={32} sx={{ margin: 2 }} />
+            <CircularProgress size={32} sx={circularProgressSx} />
           )}
-          {!(isLoading || (!isFetchingNextPage && data.length === 0)) && (
-            <div style={{ margin: "2rem 0" }}>
-              <Button onClick={() => fetchNextPage()}>Load more</Button>
-            </div>
-          )}
+          <LoadMoreButton show={showLoadMoreButton} onClick={fetchNextPage} />
         </Box>
       </Container>
     </Box>
