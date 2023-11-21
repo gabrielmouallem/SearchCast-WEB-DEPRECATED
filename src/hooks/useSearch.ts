@@ -3,6 +3,7 @@ import api from "../services/api/api";
 
 const typeofData = {
   page: 1,
+  count: 1,
   results: [
     {
       transcription: {
