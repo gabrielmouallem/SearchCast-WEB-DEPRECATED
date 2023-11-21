@@ -96,7 +96,7 @@ function App() {
                   const height = thumbnail.height;
 
                   return (
-                    <div style={{ marginTop: "15px" }}>
+                    <div style={{ marginTop: "2.5rem" }}>
                       <img src={url} width={width} height={height} />
                       <div>
                         <b>{highlightText(debouncedText, title)}</b>
