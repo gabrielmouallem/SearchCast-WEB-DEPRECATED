@@ -16,6 +16,7 @@ import {
   boxSx,
   circularProgressSx,
   innerBoxSx,
+  linearProgressSx,
   textFieldSx,
 } from "./App.styles";
 import { LoadMoreButton } from "./components/LoadMoreButton";
@@ -28,6 +29,7 @@ function App() {
   const {
     isError,
     isLoading,
+    isFetching,
     isFetchingNextPage,
     data: axiosData,
     fetchNextPage,
@@ -46,7 +48,7 @@ function App() {
     (!isFetchingNextPage && data.length === 0)
   );
 
-  const showLinearProgress = isLoading && !isError;
+  const showLinearProgress = (isLoading || isFetching) && !isError;
 
   const searchButtonDisabled = !text?.length;
 
@@ -75,10 +77,11 @@ function App() {
           </IconButton>
         </Stack>
         <Box sx={innerBoxSx}>
-          {showLinearProgress && <LinearProgress />}
+          {showLinearProgress && <LinearProgress sx={linearProgressSx} />}
           {!isLoading &&
             data.map((group, i) => (
               <React.Fragment key={i}>
+                {group.data.count} Results
                 {group.data.results.map((el) => {
                   const transcription = el.transcription;
                   const videoData = transcription.videoData;

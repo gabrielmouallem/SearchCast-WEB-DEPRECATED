@@ -15,6 +15,10 @@ export const textFieldSx: SxProps = {
   color: "white",
 };
 
+export const linearProgressSx: SxProps = {
+  margin: "2rem 0",
+};
+
 export const innerBoxSx: SxProps = {
   width: "100%",
   mt: 5,
