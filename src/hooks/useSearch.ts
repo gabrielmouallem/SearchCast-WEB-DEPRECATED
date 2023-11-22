@@ -64,23 +64,33 @@ function fetch({
   text,
   pageParam,
   signal,
+  ...options
 }: {
   text: string;
   pageParam: number;
   signal: AbortSignal;
-}) {
+} & SearchOptions) {
   return api.get<typeof typeofData>("/search", {
-    params: { text, page: pageParam },
+    params: { text, page: pageParam, ...options },
     signal,
   });
 }
 
-export function useSearch(text: string) {
+interface SearchOptions {
+  caseSensitive: boolean;
+  exactText: boolean;
+}
+
+export function useSearch(
+  text: string,
+  options: SearchOptions = { caseSensitive: false, exactText: false }
+) {
   return useInfiniteQuery({
-    queryKey: [`search`, text],
-    queryFn: ({ pageParam, signal }) => fetch({ text, pageParam, signal }),
+    queryKey: [`search`, text, options],
+    queryFn: ({ pageParam, signal }) =>
+      fetch({ text, pageParam, signal, ...options }),
     initialPageParam: 1,
-    getNextPageParam: (lastPage, _allPages) => {
+    getNextPageParam: (lastPage) => {
       const nextPageCondition =
         lastPage.data.results.length < 10 && lastPage.data.page > 1;
       const nextPage = nextPageCondition ? undefined : lastPage.data.page + 1;

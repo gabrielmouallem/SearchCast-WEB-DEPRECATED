@@ -1,8 +1,11 @@
 import { useState, useMemo } from "react";
 import {
   Box,
+  Checkbox,
   CircularProgress,
   Container,
+  FormControlLabel,
+  FormGroup,
   IconButton,
   LinearProgress,
   Stack,
@@ -22,9 +25,12 @@ import {
 import { LoadMoreButton } from "./components/LoadMoreButton";
 import { formatTime, highlightText } from "./utils";
 import "./index.css";
+import { secondsToHMS } from "./utils/secondsToHMS";
 
 function App() {
   const [text, setText] = useState("");
+  const [caseSensitive, setCaseSensitive] = useState(false);
+  const [exactText, setExactText] = useState(false);
   const debouncedText = useDebounce(text, 1000);
   const {
     isError,
@@ -34,7 +40,7 @@ function App() {
     data: axiosData,
     fetchNextPage,
     refetch,
-  } = useSearch(debouncedText);
+  } = useSearch(debouncedText, { caseSensitive, exactText });
 
   const data = useMemo(() => {
     if (axiosData) {
@@ -76,12 +82,34 @@ function App() {
             <SearchIcon htmlColor="white" />
           </IconButton>
         </Stack>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={caseSensitive}
+                onChange={() => setCaseSensitive((prev) => !prev)}
+                inputProps={{ "aria-label": "controlled" }}
+              />
+            }
+            label="Case Sensitive"
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={exactText}
+                onChange={() => setExactText((prev) => !prev)}
+                inputProps={{ "aria-label": "controlled" }}
+              />
+            }
+            label="Exact Text"
+          />
+        </FormGroup>
         <Box sx={innerBoxSx}>
           {showLinearProgress && <LinearProgress sx={linearProgressSx} />}
+          {!isLoading && <> {data?.[0]?.data?.count} Results</>}
           {!isLoading &&
             data.map((group, i) => (
               <React.Fragment key={i}>
-                {group.data.count} Results
                 {group.data.results.map((el) => {
                   const transcription = el.transcription;
                   const videoData = transcription.videoData;
@@ -91,6 +119,7 @@ function App() {
                   const viewCount = videoData.viewCount;
 
                   const timeSuffix = formatTime(transcription.start);
+                  const timeHHMMSS = secondsToHMS(transcription.start);
                   const videoLink = `${transcription.videoData.watchUrl}&t=${timeSuffix}`;
 
                   const thumbnail = videoData.thumbnail.thumbnails?.[0];
@@ -109,7 +138,7 @@ function App() {
                         {highlightText(debouncedText, `"${transcriptText}"`)}
                       </div>
                       <div>
-                        <a href={videoLink}>Access video</a>
+                        <a href={videoLink}>Access video at {timeHHMMSS}</a>
                       </div>
                       <div></div>
                     </div>
