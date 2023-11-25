@@ -20,17 +20,22 @@ import {
   circularProgressSx,
   innerBoxSx,
   linearProgressSx,
+  secretKeyBoxSx,
   textFieldSx,
 } from "./App.styles";
 import { LoadMoreButton } from "./components/LoadMoreButton";
 import { formatTime, highlightText } from "./utils";
 import "./index.css";
 import { secondsToHMS } from "./utils/secondsToHMS";
+import useLocalStorageState from "./hooks/useLocalStorageState";
+
+const SECRET_KEY = import.meta.env.VITE_APP_SECRET_KEY;
 
 function App() {
   const [text, setText] = useState("");
   const [caseSensitive, setCaseSensitive] = useState(false);
   const [exactText, setExactText] = useState(false);
+  const [secretKey, setSecretKey] = useLocalStorageState("Api-Key", "");
   const debouncedText = useDebounce(text, 1000);
   const {
     isError,
@@ -57,6 +62,22 @@ function App() {
   const showLinearProgress = (isLoading || isFetching) && !isError;
 
   const searchButtonDisabled = !text?.length;
+
+  if (!secretKey || secretKey !== SECRET_KEY)
+    return (
+      <Box sx={secretKeyBoxSx}>
+        <TextField
+          value={text}
+          onChange={(e) => {
+            setSecretKey(e.target.value);
+          }}
+          id="api-key-field"
+          label="Enter Access Key"
+          variant="outlined"
+          sx={textFieldSx} // White text color for the input
+        />
+      </Box>
+    );
 
   return (
     <Box sx={boxSx}>
@@ -111,8 +132,8 @@ function App() {
             data.map((group, i) => (
               <React.Fragment key={i}>
                 {group.data.results.map((el) => {
-                  const transcription = el.transcription;
-                  const videoData = transcription.videoData;
+                  const transcription = el;
+                  const videoData = transcription.video;
 
                   const title = videoData.title;
                   const transcriptText = transcription.text;
@@ -120,7 +141,7 @@ function App() {
 
                   const timeSuffix = formatTime(transcription.start);
                   const timeHHMMSS = secondsToHMS(transcription.start);
-                  const videoLink = `${transcription.videoData.watchUrl}&t=${timeSuffix}`;
+                  const videoLink = `${videoData.watchUrl}&t=${timeSuffix}`;
 
                   const thumbnail = videoData.thumbnail.thumbnails?.[0];
                   const url = thumbnail.url;

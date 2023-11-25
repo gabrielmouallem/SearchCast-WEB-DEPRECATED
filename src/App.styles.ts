@@ -1,5 +1,16 @@
 import { SxProps } from "@mui/material";
 
+export const secretKeyBoxSx: SxProps = {
+  color: "white", // White text color
+  width: "100vw",
+  height: "100vh",
+  display: "flex",
+  alignItems: "center",
+  textAlign: "center",
+  justifyContent: "center",
+  backgroundColor: "black",
+};
+
 export const boxSx: SxProps = {
   p: 5,
   color: "white", // White text color
