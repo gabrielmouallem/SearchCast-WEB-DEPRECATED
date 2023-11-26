@@ -68,6 +68,9 @@ function fetch({
 } & SearchOptions) {
   return api.get<typeof typeofData>("/search", {
     params: { text, page: pageParam, ...options },
+    headers: {
+      "Api-Key": JSON.parse(localStorage.getItem("Api-Key") ?? ""),
+    },
     signal,
   });
 }
