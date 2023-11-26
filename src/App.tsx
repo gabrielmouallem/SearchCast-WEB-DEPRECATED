@@ -67,7 +67,7 @@ function App() {
     return (
       <Box sx={secretKeyBoxSx}>
         <TextField
-          value={text}
+          value={secretKey}
           onChange={(e) => {
             setSecretKey(e.target.value);
           }}
