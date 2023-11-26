@@ -66,7 +66,7 @@ function fetch({
   pageParam: number;
   signal: AbortSignal;
 } & SearchOptions) {
-  return api.get<typeof typeofData>("/search", {
+  return api.get<typeof typeofData>("/v1/search", {
     params: { text, page: pageParam, ...options },
     headers: {
       "Api-Key": JSON.parse(localStorage.getItem("Api-Key") ?? ""),
