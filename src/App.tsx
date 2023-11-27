@@ -1,15 +1,13 @@
 import { useState, useMemo } from "react";
 import {
   Box,
-  Checkbox,
   CircularProgress,
   Container,
-  FormControlLabel,
-  FormGroup,
   IconButton,
+  InputAdornment,
   LinearProgress,
-  Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSearch } from "./hooks/useSearch";
@@ -25,7 +23,6 @@ import {
 } from "./App.styles";
 import { LoadMoreButton } from "./components/LoadMoreButton";
 import { formatTime, highlightText } from "./utils";
-import "./index.css";
 import { secondsToHMS } from "./utils/secondsToHMS";
 import useLocalStorageState from "./hooks/useLocalStorageState";
 
@@ -33,8 +30,8 @@ const SECRET_KEY = import.meta.env.VITE_APP_SECRET_KEY;
 
 function App() {
   const [text, setText] = useState("");
-  const [caseSensitive, setCaseSensitive] = useState(false);
-  const [exactText, setExactText] = useState(false);
+  const [caseSensitive, _setCaseSensitive] = useState(false);
+  const [exactText, _setExactText] = useState(false);
   const [secretKey, setSecretKey] = useLocalStorageState("Api-Key", "");
   const debouncedText = useDebounce(text, 1000);
   const {
@@ -66,13 +63,16 @@ function App() {
   if (!secretKey || secretKey !== SECRET_KEY)
     return (
       <Box sx={secretKeyBoxSx}>
+        <Typography variant="h4" gutterBottom letterSpacing="0.5rem">
+          Seja <span style={{ backgroundColor: "blue" }}>bem-vindo!</span>
+        </Typography>
         <TextField
           value={secretKey}
           onChange={(e) => {
             setSecretKey(e.target.value);
           }}
           id="api-key-field"
-          label="Enter Access Key"
+          label="Digite sua chave de acesso"
           variant="outlined"
           sx={textFieldSx} // White text color for the input
         />
@@ -82,52 +82,31 @@ function App() {
   return (
     <Box sx={boxSx}>
       <Container>
-        <Stack
-          width="100%"
-          direction="row"
-          gap={1}
-          alignItems={"center"}
-          justifyContent={"center"}
-        >
-          <TextField
-            value={text}
-            onChange={(e) => {
-              setText(e.target.value);
-            }}
-            id="search-field"
-            label="Search"
-            variant="outlined"
-            sx={textFieldSx} // White text color for the input
-          />
-          <IconButton onClick={() => refetch()} disabled={searchButtonDisabled}>
-            <SearchIcon htmlColor="white" />
-          </IconButton>
-        </Stack>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={caseSensitive}
-                onChange={() => setCaseSensitive((prev) => !prev)}
-                inputProps={{ "aria-label": "controlled" }}
-              />
-            }
-            label="Case Sensitive"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={exactText}
-                onChange={() => setExactText((prev) => !prev)}
-                inputProps={{ "aria-label": "controlled" }}
-              />
-            }
-            label="Exact Text"
-          />
-        </FormGroup>
+        <TextField
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+          }}
+          id="search-field"
+          placeholder="Pesquise uma palavra, frase ou nome"
+          variant="outlined"
+          sx={textFieldSx} // White text color for the input
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="start">
+                <IconButton
+                  onClick={() => refetch()}
+                  disabled={searchButtonDisabled}
+                >
+                  <SearchIcon htmlColor="white" />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
         <Box sx={innerBoxSx}>
           {showLinearProgress && <LinearProgress sx={linearProgressSx} />}
-          {!isLoading && <> {data?.[0]?.data?.count} Results</>}
+          {!isLoading && <> {data?.[0]?.data?.count ?? "N.A."} Resultados</>}
           {!isLoading &&
             data.map((group, i) => (
               <React.Fragment key={i}>
@@ -149,7 +128,12 @@ function App() {
                   const height = thumbnail.height;
 
                   return (
-                    <div style={{ marginTop: "2.5rem" }}>
+                    <div
+                      style={{
+                        marginTop: "2.5rem",
+                        fontFamily: "Roboto, sans-serif",
+                      }}
+                    >
                       <img src={url} width={width} height={height} />
                       <div>
                         <b>{highlightText(debouncedText, title)}</b>
@@ -159,7 +143,9 @@ function App() {
                         {highlightText(debouncedText, `"${transcriptText}"`)}
                       </div>
                       <div>
-                        <a href={videoLink}>Access video at {timeHHMMSS}</a>
+                        <a href={videoLink} target="_blank">
+                          Access video at {timeHHMMSS}
+                        </a>
                       </div>
                       <div></div>
                     </div>
