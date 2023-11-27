@@ -23,6 +23,7 @@ const stylesSwitch: Styles<StylesProperties> = {
       stack: {
         margin: "3rem 0 8rem 0",
         flexDirection: "column",
+        padding: "2rem",
       },
       box: {
         flex: 1,
@@ -34,6 +35,9 @@ const stylesSwitch: Styles<StylesProperties> = {
         backgroundColor: "#111",
         alignItems: "center",
         justifyContent: "center",
+      },
+      button: {
+        backgroundColor: "#111",
       },
     },
     inline: {
@@ -71,6 +75,9 @@ const stylesSwitch: Styles<StylesProperties> = {
         alignItems: "center",
         justifyContent: "center",
       },
+      button: {
+        backgroundColor: "#111",
+      },
     },
     inline: {
       highlightBlue: { backgroundColor: "blue" },
@@ -98,6 +105,8 @@ const LandingPage = () => {
   const stylesKey = isMobile ? "mobile" : "desktop";
 
   const styles = stylesSwitch[stylesKey];
+  const titleVariant = isMobile ? "h4" : "h2";
+  const descriptionVariant = isMobile ? "body2" : "body1";
 
   const handleAccessClick = () => navigate("/app");
 
@@ -118,21 +127,26 @@ const LandingPage = () => {
     <Container>
       <Stack sx={styles.sx.stack}>
         <Box sx={styles.sx.box}>
-          <Typography variant="h2" gutterBottom letterSpacing="0.5rem">
-            Pesquise cortes dos maiores{" "}
-            <span style={styles.inline.highlightBlue}>podcasts</span> de acordo
-            com seu <span style={styles.inline.highlightBlue}> interesse</span>.
+          <Typography
+            variant={titleVariant}
+            gutterBottom
+            letterSpacing="0.5rem"
+          >
+            Descubra trechos destacados de{" "}
+            <span style={styles.inline.highlightBlue}> podcasts</span> conforme
+            seus <span style={styles.inline.highlightBlue}> interesses</span>.
           </Typography>
           <Typography
-            variant="body1"
+            variant={descriptionVariant}
             marginTop="3rem"
             gutterBottom
             fontWeight={100}
             letterSpacing="0.3rem"
           >
-            Com a nossa ferramenta você pesquisa um nome, palavra ou texto e nós
-            retornamos o trecho exato em que algum podcast comenta sobre o
-            assunto.
+            O <span style={styles.inline.highlightBlue}> SearchTube</span> é uma
+            plataforma para buscar textos específicos em transcrições de
+            podcasts do YouTube. Ela apresenta uma lista de vídeos que mencionam
+            o texto, com links diretos para os momentos exatos das referências.
           </Typography>
         </Box>
         <Box sx={styles.sx.box}>
@@ -153,6 +167,7 @@ const LandingPage = () => {
             Acessar
           </Button>
           <Button
+            sx={styles.sx.button}
             variant="outlined"
             size="large"
             color="secondary"
