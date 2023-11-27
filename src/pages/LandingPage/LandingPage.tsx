@@ -138,11 +138,13 @@ const LandingPage = () => {
         <Box sx={styles.sx.box}>
           <video
             autoPlay
+            muted
             src={videoSrc}
             style={styles.inline.phoneFrame}
             loop
-            controls={false}
+            controls={true}
           />
+          <small>*** Ligue o som do vídeo ***</small>
         </Box>
       </Stack>
       <div style={styles.inline.actionButtons}>
