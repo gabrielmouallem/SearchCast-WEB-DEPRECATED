@@ -113,7 +113,7 @@ const LandingPage = () => {
   const handleAboutMoreClick = () => {
     const phoneNumber = "+5535998607515";
     const message = encodeURIComponent(
-      "Olá, gostaria de saber mais sobre a ferramenta de cortes para criadores de conteúdo."
+      "Olá, gostaria de saber mais sobre a ferramenta de cortes para criadores de conteúdo SearchTube."
     );
 
     // Create the WhatsApp URL with the phone number and message
