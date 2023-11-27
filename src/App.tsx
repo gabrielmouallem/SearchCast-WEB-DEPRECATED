@@ -114,6 +114,10 @@ function App() {
                   const transcription = el;
                   const videoData = transcription.video;
 
+                  const publishDate = new Date(
+                    videoData.publishDate
+                  ).toLocaleDateString();
+
                   const title = videoData.title;
                   const transcriptText = transcription.text;
                   const viewCount = videoData.viewCount;
@@ -136,9 +140,14 @@ function App() {
                     >
                       <img src={url} width={width} height={height} />
                       <div>
+                        <b></b>
+                      </div>
+                      <div>
                         <b>{highlightText(debouncedText, title)}</b>
                       </div>
-                      <div>{viewCount} Views</div>
+                      <div>
+                        {publishDate} - {viewCount} Views
+                      </div>
                       <div>
                         {highlightText(debouncedText, `"${transcriptText}"`)}
                       </div>

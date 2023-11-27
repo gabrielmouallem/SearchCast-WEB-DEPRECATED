@@ -22,6 +22,7 @@ const typeofData = {
         isUnpluggedCorpus: false,
         latencyClass: "MDE_STREAM_OPTIMIZATIONS_RENDERER_LATENCY_NORMAL",
         lengthSeconds: "8527",
+        publishDate: "ISOStringDate",
         thumbnail: {
           thumbnails: [
             {
