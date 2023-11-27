@@ -137,11 +137,7 @@ const LandingPage = () => {
         </Box>
         <Box sx={styles.sx.box}>
           <video
-            ref={(ref) =>
-              setTimeout(() => {
-                if (ref?.play) ref.play();
-              }, 2000)
-            }
+            autoPlay
             src={videoSrc}
             style={styles.inline.phoneFrame}
             loop
