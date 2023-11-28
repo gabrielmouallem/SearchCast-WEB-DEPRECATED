@@ -1,5 +1,6 @@
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import api from "../services/api/api";
+import { useNavigate } from "react-router-dom";
 
 const typeofData = {
   page: 1,
@@ -57,25 +58,6 @@ const typeofData = {
   ],
 };
 
-function fetch({
-  text,
-  pageParam,
-  signal,
-  ...options
-}: {
-  text: string;
-  pageParam: number;
-  signal: AbortSignal;
-} & SearchOptions) {
-  return api.get<typeof typeofData>("/v1/search", {
-    params: { text, page: pageParam, ...options },
-    headers: {
-      "Api-Key": JSON.parse(localStorage.getItem("Api-Key") ?? ""),
-    },
-    signal,
-  });
-}
-
 interface SearchOptions {
   caseSensitive: boolean;
   exactText: boolean;
@@ -85,6 +67,33 @@ export function useSearch(
   text: string,
   options: SearchOptions = { caseSensitive: false, exactText: false }
 ) {
+  const navigate = useNavigate();
+
+  function fetch({
+    text,
+    pageParam,
+    signal,
+    ...options
+  }: {
+    text: string;
+    pageParam: number;
+    signal: AbortSignal;
+  } & SearchOptions) {
+    return api
+      .get<typeof typeofData>("/v1/search", {
+        params: { text, page: pageParam, ...options },
+        headers: {
+          "Api-Key": JSON.parse(localStorage.getItem("Api-Key") ?? ""),
+        },
+        signal,
+      })
+      .catch((err) => {
+        if ([401, 402, 403, 404].includes(err?.response?.status)) {
+          navigate("/");
+        }
+      });
+  }
+
   return useInfiniteQuery({
     queryKey: [`search`, text, options],
     queryFn: ({ pageParam, signal }) =>

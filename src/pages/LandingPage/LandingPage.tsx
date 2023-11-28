@@ -111,16 +111,16 @@ const LandingPage = () => {
   const handleAccessClick = () => navigate("/app");
 
   const handleAboutMoreClick = () => {
-    const phoneNumber = "+5535998607515";
-    const message = encodeURIComponent(
-      "Olá, gostaria de saber mais sobre a ferramenta de cortes para criadores de conteúdo SearchTube."
-    );
+    const email = "recipient@example.com";
+    const subject = "Hello from My Website";
+    const body =
+      "Dear recipient,\n\nI hope this email finds you well.\n\nBest regards,\n[Your Name]";
 
-    // Create the WhatsApp URL with the phone number and message
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+    const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
 
-    // Open the WhatsApp URL in a new tab
-    window.open(whatsappUrl, "_blank");
+    window.open(mailtoLink, "_blank");
   };
 
   return (
