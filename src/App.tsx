@@ -14,6 +14,7 @@ import { useSearch } from "./hooks/useSearch";
 import { useDebounce } from "@uidotdev/usehooks";
 import React from "react";
 import {
+  EnvironmentFlag,
   boxSx,
   circularProgressSx,
   innerBoxSx,
@@ -25,8 +26,10 @@ import { LoadMoreButton } from "./components/LoadMoreButton";
 import { formatTime, highlightText } from "./utils";
 import { secondsToHMS } from "./utils/secondsToHMS";
 import useLocalStorageState from "./hooks/useLocalStorageState";
+import { EnvModes } from "./App.types";
 
 const SECRET_KEY = import.meta.env.VITE_APP_SECRET_KEY;
+const ENV = import.meta.env.MODE as EnvModes;
 
 function App() {
   const [text, setText] = useState("");
@@ -63,6 +66,7 @@ function App() {
   if (!secretKey || secretKey !== SECRET_KEY)
     return (
       <Box sx={secretKeyBoxSx}>
+        <EnvironmentFlag env={ENV}>{ENV}</EnvironmentFlag>
         <Typography variant="h4" gutterBottom letterSpacing="0.5rem">
           Seja <span style={{ backgroundColor: "blue" }}>bem-vindo!</span>
         </Typography>
@@ -81,6 +85,7 @@ function App() {
 
   return (
     <Box sx={boxSx}>
+      <EnvironmentFlag env={ENV}>{ENV}</EnvironmentFlag>
       <Container>
         <TextField
           value={text}
