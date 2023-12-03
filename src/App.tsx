@@ -63,6 +63,15 @@ function App() {
 
   const searchButtonDisabled = !text?.length;
 
+  const hideLoadMoreButton = useMemo(() => {
+    return (
+      data.reduce(
+        (prev, group) => prev + (group?.data?.results?.length ?? 0),
+        0
+      ) === data?.[0]?.data?.count
+    );
+  }, [data]);
+
   if (!secretKey || secretKey !== SECRET_KEY)
     return (
       <Box sx={secretKeyBoxSx}>
@@ -170,7 +179,9 @@ function App() {
           {!!isFetchingNextPage && (
             <CircularProgress size={32} sx={circularProgressSx} />
           )}
-          <LoadMoreButton show={showLoadMoreButton} onClick={fetchNextPage} />
+          {!hideLoadMoreButton && (
+            <LoadMoreButton show={showLoadMoreButton} onClick={fetchNextPage} />
+          )}
         </Box>
       </Container>
     </Box>
