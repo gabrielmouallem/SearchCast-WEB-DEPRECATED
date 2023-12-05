@@ -22,7 +22,7 @@ import {
   secretKeyBoxSx,
   textFieldSx,
 } from "./App.styles";
-import { LoadMoreButton } from "./components/LoadMoreButton";
+import { LoadMoreButton } from "./components/LoadMoreButton/LoadMoreButton";
 import { formatTime, highlightText } from "./utils";
 import { secondsToHMS } from "./utils/secondsToHMS";
 import useLocalStorageState from "./hooks/useLocalStorageState";
